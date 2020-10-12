@@ -59,6 +59,11 @@ app.use((req, res, next) => {
 
 // 3) ROUTES
 
+app.get("/api/v1/users", (req, res, next) => {
+  res.send("User");
+  next();
+})
+
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
