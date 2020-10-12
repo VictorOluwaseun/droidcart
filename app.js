@@ -8,6 +8,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 
+const userRouter = require("./routes/userRoutes");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 
@@ -59,10 +60,11 @@ app.use((req, res, next) => {
 
 // 3) ROUTES
 
-app.get("/api/v1/users", (req, res, next) => {
-  res.send("User");
-  next();
+app.get("/", (req, res, next) => {
+  res.send("<h1>Welcome to DroidCart</h1>")
 })
+
+app.use("/api/v1/users", userRouter)
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
