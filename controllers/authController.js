@@ -47,11 +47,21 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm
   });
 
-  const messageAndUrl = `As our first customer, we hope to give you the best shopping experience. Click the link below to update your profile and explore our latest products. \n${req.protocol}://${req.get('host')}/me`;
   // console.log(url);
-  await new Email(newUser, messageAndUrl).sendWelcome();
+  try {
+    const messageAndUrl = `As our first customer, we hope to give you the best shopping experience. Click the link below to update your profile and explore our latest products. \n${req.protocol}://${req.get('host')}/me`;
 
-  createSendToken(newUser, 201, req, res);
+    // Send welcome email to the user
+    await new Email(newUser, messageAndUrl).sendWelcome();
+
+    createSendToken(newUser, 201, req, res);
+
+  } catch (err) {
+    console.log(err);
+    createSendToken(newUser, 201, req, res);
+
+  }
+
 });
 
 exports.login = catchAsync(async (req, res, next) => {
