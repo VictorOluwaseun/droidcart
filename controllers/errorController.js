@@ -63,7 +63,7 @@ const sendErrorProd = (err, req, res) => {
     }
     // B) Programming or other unknown error: don't leak error details
     // 1) Log error
-    console.error('ERROR 💥', err);
+    // console.error('ERROR 💥', err);
     // 2) Send generic message
     return res.status(500).json({
       status: 'error',
@@ -103,11 +103,13 @@ module.exports = (err, req, res, next) => {
       ...err
     };
     error.message = err.message;
+    error.name = err.name
 
     if (error.name === 'CastError') error = handleCastErrorDB(error);
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
     if (error.name === 'ValidatorError' || error.name === 'ValidationError')
       error = handleValidationErrorDB(error);
+
     if (error.name === 'JsonWebTokenError') error = handleJWTError();
     if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
 
