@@ -6,8 +6,15 @@ const handleCastErrorDB = err => {
 };
 
 const handleDuplicateFieldsDB = err => {
-  const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
-  console.log(value);
+  let value = err.message.match(/(["'])(?:(?=(\\?))\2.)*?\1/);
+  // let value = err.message.match(/(["'])(?:(?=(\\?))\2.)*?\1/);
+
+  const message = `Duplicate field value: ${value.join("")}. Please enter another value`;
+  //using regular expression to find the texts are within quotes. search-string: regular expression match text between quotes
+
+  if (!Array.isArray(err.keyValue) && err.keyValue.email) {
+    return new AppError("User already exits", 400);
+  }
 
   const message = `Duplicate field value: ${value}. Please use another value!`;
   return new AppError(message, 400);
